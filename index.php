@@ -12,7 +12,6 @@
   $conn = new mysqli($host, $user);
   $mysql_version = $conn->server_info;
 
-  // Bắt đầu tính thời gian
   $start_time = microtime(true);
 
   $server_username = getenv('USERNAME');
@@ -180,7 +179,6 @@
   <?php endif; ?>
 
   <?php 
-    // Kết thúc tính thời gian và hiển thị
     $end_time = microtime(true);
     $time_taken = $end_time - $start_time;
     echo "Page loaded: " . number_format($time_taken, 4) . " seconds.";
