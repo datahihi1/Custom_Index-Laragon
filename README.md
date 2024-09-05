@@ -1,0 +1,2 @@
+- This is a custom dashboard for dev use Laragon !
+- To use, copy file index.php and paste at (Your-disk):\laragon\www\
