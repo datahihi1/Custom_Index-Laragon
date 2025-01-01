@@ -1,25 +1,26 @@
 <?php
-  if (!empty($_GET['q'])) {
-    switch ($_GET['q']) {
-      case 'info':
-        phpinfo();
-        exit;
-    }
+
+$start_time = microtime(true);
+if (!empty($_GET['q'])) {
+  switch ($_GET['q']) {
+    case 'info':
+      phpinfo();
+      exit;
   }
+}
 
-  $host = "localhost";
-  $user = "root";
-  $conn = new mysqli($host, $user);
-  $mysql_version = $conn->server_info;
+$host = "localhost";
+$user = "root";
+$conn = new mysqli($host, $user);
+$mysql_version = $conn->server_info;
 
-  $start_time = microtime(true);
-
-  $server_username = getenv('USERNAME');
+$server_username = getenv('USERNAME');
 
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -124,16 +125,20 @@
       }
 
       nav ul {
-    list-style: none;
-    padding: 0;
-    display:contents; /* Sử dụng Grid Layout */
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Tạo các cột tự động điều chỉnh */
-    gap: 1rem;  /* Khoảng cách giữa các mục */
-  }
-    
-  nav ul li {
-    text-align: left; /* Căn lề trái cho nội dung của từng mục */
-  }
+        list-style: none;
+        padding: 0;
+        display: contents;
+        /* Sử dụng Grid Layout */
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        /* Tạo các cột tự động điều chỉnh */
+        gap: 1rem;
+        /* Khoảng cách giữa các mục */
+      }
+
+      nav ul li {
+        text-align: left;
+        /* Căn lề trái cho nội dung của từng mục */
+      }
 
       nav a {
         margin: 0.5rem 1rem;
@@ -141,6 +146,7 @@
     }
   </style>
 </head>
+
 <body>
   <header>
     <img class="header__item header--logo" src="https://i.imgur.com/ky9oqct.png" alt="Offline">
@@ -148,55 +154,71 @@
   </header>
 
   <main>
-    <p>Server Username: <?=$server_username?></p>
-    <p>Time: 
-    <span id="current-time"> 
-      <?php
+    <p>Server Username: <?= $server_username ?></p>
+    <p>Time:
+      <span id="current-time">
+        <?php
         $date = new DateTime('now', new DateTimeZone('Asia/Ho_Chi_Minh'));
         echo $date->format('Y-m-d H:i:s');
-      ?>
-    </span></p>
-    <p><?php print($_SERVER['SERVER_SOFTWARE']);?></p>
+        ?>
+      </span>
+    </p>
+    <p><?php print($_SERVER['SERVER_SOFTWARE']); ?></p>
     <p>PHP version: <?php print PHP_VERSION; ?> <span><a title="phpinfo()" href="/?q=info">info</a></span></p>
-    <p>Document Root: <?php print ($_SERVER['DOCUMENT_ROOT']); ?></p>
-    <p>MySQL version: <?=$mysql_version?><span> <a title="Go to phpMyAdmin" href="/phpmyadmin">Go to</a></span></p>
+    <p>Document Root: <?php print($_SERVER['DOCUMENT_ROOT']); ?></p>
+    <p>MySQL version: <?= $mysql_version ?><span> <a title="Go to phpMyAdmin" href="/phpmyadmin">Go to</a></span></p>
   </main>
 
-  <?php $dirList = glob('*', GLOB_ONLYDIR); ?>
-  <?php if (!empty($dirList)): ?>
+  <?php
+  $dirList = glob('*', GLOB_ONLYDIR);
+  $fileList = array_filter(glob('*'), 'is_file');
+  ?>
+  <?php if (!empty($dirList) || !empty($fileList)): ?>
     <nav>
-        <ul>
-        <?php foreach ($dirList as $key => $value): $link = 'http://' . $value . '.test'; ?>
-            <li><a href="<?php echo $link; ?>" target="_blank"><?php echo $link; ?></a><span> or:</span><a href="<?php echo "/" . $value;?>" target="_blank"><?php echo "/" . $value;?></a></li>
-        <?php endforeach; ?>
-        </ul>
+      <ul>
+        <?php if (!empty($dirList)): ?>
+          <li><strong>Directories:</strong></li>
+          <?php foreach ($dirList as $key => $value): $link = 'http://' . $value . '.test'; ?>
+            <li><a href="<?php echo $link; ?>" target="_blank"><?php echo $link; ?></a><span> or:</span><a href="<?php echo "/" . $value; ?>" target="_blank"><?php echo "/" . $value; ?></a></li>
+          <?php endforeach; ?>
+        <?php endif; ?>
+
+        <?php if (!empty($fileList)): ?>
+          <li><strong>Files:</strong></li>
+          <?php foreach ($fileList as $file): ?>
+            <li><a href="<?php echo $file; ?>" target="_blank"><?php echo $file; ?></a></li>
+          <?php endforeach; ?>
+        <?php endif; ?>
+      </ul>
     </nav>
-  <?php else:?>
+  <?php else: ?>
     <aside>
-      <p class="alert">There are no directories, create your first project now</p>
+      <p class="alert">There are no directories or files, create your first project now</p>
       <div><img src="https://i.imgur.com/3Sgu8XI.png" alt="Offline"></div>
     </aside>
   <?php endif; ?>
 
-  <?php 
-    $end_time = microtime(true);
-    $time_taken = $end_time - $start_time;
-    echo "Page loaded: " . number_format($time_taken, 4) . " seconds.";
+
+  <?php
+  $end_time = microtime(true);
+  $time_taken = $end_time - $start_time;
+  echo "Page loaded: " . number_format($time_taken, 4) . " seconds.";
   ?>
 </body>
-  <script>
-    function updateTime() {
-      const now = new Date();
-      const formattedTime = now.getFullYear() + '-' +
-        String(now.getMonth() + 1).padStart(2, '0') + '-' +
-        String(now.getDate()).padStart(2, '0') + ' ' +
-        String(now.getHours()).padStart(2, '0') + ':' +
-        String(now.getMinutes()).padStart(2, '0') + ':' +
-        String(now.getSeconds()).padStart(2, '0');
-      document.getElementById('current-time').innerText = formattedTime;
-    }
+<script>
+  function updateTime() {
+    const now = new Date();
+    const formattedTime = now.getFullYear() + '-' +
+      String(now.getMonth() + 1).padStart(2, '0') + '-' +
+      String(now.getDate()).padStart(2, '0') + ' ' +
+      String(now.getHours()).padStart(2, '0') + ':' +
+      String(now.getMinutes()).padStart(2, '0') + ':' +
+      String(now.getSeconds()).padStart(2, '0');
+    document.getElementById('current-time').innerText = formattedTime;
+  }
 
-    setInterval(updateTime, 1000);
-    window.onload = updateTime;
-  </script>
+  setInterval(updateTime, 1000);
+  window.onload = updateTime;
+</script>
+
 </html>
