@@ -1,3 +1,3 @@
-- This is a custom dashboard for dev use Laragon !
-- To use, copy file index.php and paste at (Your-disk):\laragon\www\
-- It has been run at http://localhost/
+- This is a custom index(index.php) for dev use Laragon !
+- To use, copy all code in file. Click on the index file on the drive(or create) and paste at (Your-disk):\laragon\www\index.php
+- It has been run at http://localhost/index.php
