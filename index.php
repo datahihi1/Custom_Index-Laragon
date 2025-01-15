@@ -11,7 +11,6 @@ if (!empty($_GET['q'])) {
       // Hiển thị danh sách các extension dưới dạng alert của JavaScript
       echo "<script>";
       echo "alert('Các extension PHP được bật: " . implode(', ', array_map('addslashes', $extensions)) . "');";
-      echo "window.location.href = http://localhost/";
       echo "</script>";
       exit;
   }
@@ -92,7 +91,7 @@ $server_username = getenv('USERNAME');
     }
 
     nav {
-      width: 100%;
+      width: 90%;
       padding: 0.7rem;
       background-color: white;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -113,7 +112,7 @@ $server_username = getenv('USERNAME');
       padding: 0.7rem;
       border-radius: 8px;
       box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-      text-align: center;
+      text-align: left;
     }
 
     nav a {
@@ -202,7 +201,7 @@ $server_username = getenv('USERNAME');
       </span>
     </p>
     <p><?php print($_SERVER['SERVER_SOFTWARE']); ?></p>
-    <p>PHP version: <?php print PHP_VERSION; ?> <span><a title="phpinfo()" href="/?q=info">info</a></span></p>
+    <p>PHP version: <?php print PHP_VERSION; ?> <span><a title="phpinfo()" href="/?q=info">info</a></span> | <span><a title="See ext loaded" href="/?q=ext_loaded">extension</a></span></p>
     <p>Document Root: <?php print($_SERVER['DOCUMENT_ROOT']); ?></p>
     <p>MySQL version: <?= $mysql_version ?><span> <a title="Go to phpMyAdmin" href="/phpmyadmin">Go to</a></span></p>
   </main>
@@ -215,16 +214,16 @@ $server_username = getenv('USERNAME');
     <nav>
       <ul>
         <?php if (!empty($dirList)): ?>
-          <li><strong>Directories:</strong></li>
+          <p><strong>Directories:</strong></p>
           <?php foreach ($dirList as $key => $value): $link = 'http://' . $value . '.test'; ?>
-            <li><a href="<?php echo $link; ?>" target="_blank"><?php echo $link; ?></a><span> or:</span><a href="<?php echo "/" . $value; ?>" target="_blank"><?php echo "/" . $value; ?></a></li>
+            <li><a href="<?php echo htmlspecialchars($link); ?>" target="_blank"><?php echo $link; ?></a><span> or:</span><a href="<?php echo "/" . $value; ?>" target="_blank"><?php echo " /" . $value; ?></a></li>
           <?php endforeach; ?>
         <?php endif; ?>
 
         <?php if (!empty($fileList)): ?>
-          <li><strong>Files:</strong></li>
+          <p><strong>Files:</strong></p>
           <?php foreach ($fileList as $file): ?>
-            <li><a href="<?php echo $file; ?>" target="_blank"><?php echo $file; ?></a></li>
+            <li><a href="<?php echo htmlspecialchars($file); ?>" target="_blank"><?php echo $file; ?></a></li>
           <?php endforeach; ?>
         <?php endif; ?>
       </ul>
@@ -244,7 +243,7 @@ $server_username = getenv('USERNAME');
   ?>
   <div class="bottom-left-box" title="Page load time">
     <img src="data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAAGYktHRAD/AP8A/6C9p5MAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAAHdElNRQfpAQEGHhSyVTkvAAAMDklEQVRYw3WXZ3Cd5ZmGr/crp1fp6KjLlmwVZGQhAXKTqQYMCELokNDGCTskFJsdBhYyzO7sbrIOBEOyk4xNgHhnQkxbMLYBG4gTI4KNDbaFbcnqVi9H0tHp5Sv7Q0agJXn/fvPOdT/lfr7nFfyD82VbB09v2UGu383p3hEOHmnnpmtXu8cnZxanMtklum4UmeAUCE2WRUhRlH63096z7ecPjLVs+LlRVhzg/e072fy7p3j8gVvp6OxCy2rE4wnsdhuyLLOstgbx9+AbHnuepvpKXn7jY358+xXSy298VJdIpFtMIV1usdiqbA5XjtVmt0hCSNlMysxmM1omnY5nMqkh09APWVRlV37Ad+Bk12C4rnoR6UyWHK+LE50DjE/NEvB7WFJWQCqTXShgYmKSH2x6AZtVZdd7n9K8pr42Gk/+VLXYb8wrKC0oLq0gN1iI0+lGUS1omSSx8ASGoZNOp4lFI4Qmx5mcGE0nE7GDFlX+74I8325dN1P33H6J2PLbPZelUtmVFqvSVlEe3BuejWfmBfSNjnHXg8+hqgrVFUXq4eOdPzSQnyouq1xSvayBQLAIIUmkEnEikRnisSipRJRMMobVasPpcuFwOJFlmWQiwfDQGQYHelOyMB7+27ufv3j+FQ0/Mlzpzd4aMyfaKxLMWJ744r3nfyMAkskUV9/7rwDk+NyO3oHRp2wO76bl5zfbFy85B4CxkQH6utuJhiewqyY+tw271UJW14nEksxGU5iShWB+EUVFpdjsduKxKJIkWk8cPbxvRhvbtPRu4Q+uEAx/rNOzXT5UmJOzXgG485FnsagquX6Xtb1r8N/cvrxNTc1XycGCEqZDY7Qd/Qw9McXK8ypYc/56KsrycTlsxBNpXE4bmazGeCjM0ZO97D94krZjw5xbfyFOl5v+3p7miDnVXHmPINgkyCZ04sMGAmXC6bCnxebfvs6p7iG2P/coDVc/tMnu8m9ec2mLGggW0t/TwYmjraypX8Qd16+lvDQfWZbAhPFQmM1b3+ahe66lvCSICQgBM7NxOnqGyGDntT2HOdF3hIq7NPKbJLS0ztBeg8Gdyhm75LgrFI58ovzhrf0ossSK6zdepJnKE40rLlUDwUJ6Ok9yuq2VH910Edeva0JVZQzDRNcNhBAgBBZVQQgwTRPDNAHwuh2sbKjm7Q8O0jV0dB6uZ3XGWnUGdytjFsP28JGvej55/MEbkBvXrCfH53JNheNbqmobG6qXNTI+Okjb4f3cf9sl1NeWI8sSNqtlgVXtNgsrzqsi1+fmay8JwADe+eAQW9/dQ/FtafJXSBiaweQRnYE3bBR4F+84pzL4O4/Hke0bnEAaHJ1idGL6Cpc3Z11VbSPpdIrjR1ppufhcrr3sAt7+4CBbXnqXZCqzwLNCCNwuO5IkFsB37v2cre/upvDW1BxcN5g+odH3usriguXk5Rfe8vmxrmf9Hqc11+dCunB5hUXTjDsWlddY3R4fvV2nyHEa3NayFlVRuOP6tTTVVwIgSRKS+EaGeTbt34WnKVghYRoms90a/a8pLAnUUbG0CofL4xWSetvAyMTywdEQUmfvSI3F6lhdsmgpmXSKgd52Wi5rJC/Xg2EYFOXncN26C5Flia7+UYbHpheUQgCGCTv3HloIN02iAxrdf5S4smY1N1/dRDqdwu324M/J9afS2Svau4aQUunMSrc3J9/rz2UqNIZVyrCqoQbTML+Ok2gsyQuv7ObhZ7by8C+28b8fHMQwTIQQGCa8s3eu5t+GJ8Y0ul6FFcFGfnL3eibGhug8fQpJksnJDWKarL7hqhU2RTfMRq8/oKiqlcmJUcqLcwnmeue7WpIkDh7tZO/Jz1j6Y5PUVIytb+0hk9G46ZpV7Pn4CNt2fRsOqWmd7h0m5yjL2LihBa/bQUlBgFjkC7RsBo/XhyQrSwdHJvMUoMLl9gIQCU9TVxvAalXnrHU2C9MzMYRTw1Us4a+RUewZtv9pH8dO9vPVSPcCeCai0fOmQVFkCY9tvIHCoB/TNCktCqBIJul0GpvNjqKo/kxGC0pCSD6LxYZpGmQzKXJ8bo6d6mPbnz6kq38UgAvql+KP5zP8Vx0ja5DXIFH6gwxfRI9TcEtyHq4lNPp36bjPFPP4P92IALa9uo/PvjyN22lDVSSyWgZFVpBl2ZrVNLeEQHztL/OsvaKxJMNjUySSKUzTpKIsyIYbr2TqYzvTp3RMwyR3uaDhMYXghXNwPa0zsE+H40Ee2/B9apYWE0ukGB6fIhyJA2JugJkscJFiGmYkm0kjhEBVrYQjce783kWsaqxGCObLsK65jtO9w+x6az+OoI49X0G2z6k2sjojB3Tin/h44r7v0VhXgabpVFcU8bMHb5lzUN8IWU1HUVV0Xccw9IxFVeISmGfisQggcHt8DIyEyGb1swq/USvLMnffdAk19mr6dhpoCR0ME0MzGP9cJ/S+k5/e0sLaptp50d++PzIxQ1YXWK1W0ukkmqaFLao6KUmSODobntI1LUsgWEjfUIipcHQuXSxMl9/r4ic/vBqlK4+RAxpaMstUm8bw21buu+Yq1l/aOD+c/v/dtvZ+rHYXqmohGo2ga9m+YMA7IVkt6sFIeCoUnZ0hkFdALC344qvub0asEMiSBIBhGNRWlrDhxiuZ3Gen83WD/h0qtzZfxs3XrOLsFSRJmg9ACMHUTJRDx7vJzy8EYCo0gYBDb75zICE3XXxteDI0s8bh8lYVlVaQSMTp6uxg7YW12Gwqs9E4bR1nCOR4kOW5hisvC+KzedCHHLSsWsmtLauxWNS5ZtQNjp7qxaoqOOw2JCHY/ecjtB7ro6p6Galkku6u9ogimf8RLAgMyFnn0qzdqsjJZPK60sWVkj83SFvbV6iSRl31Il7c8SGfftHBxU3LsFiU+QhrK0u4ZOW51NWUoZwVBqDrOi+99hHH2vtYc34NfUMT/Hr7ewSLKsgN5NHX18Xk+MifFxUHX3A6bFm5YdVVOB3WoamZmWbVYltUsmgJFpuDvxxopSjoo7K8iMtW1xHI8SxoKtME3dC/0yuKIlOzpJiA34PVovKr3+9kOiFRVV1LLBbl9Km2hCSMJ4fHp0909Y0in4n7kWU56bBZQtNToWtz84qsRSXlZDSTj/a30lC7mPpzFi/8AQlBOBJn66v7KC/Nx+2yL/ju8ziRJIlf/f5dOs7MUFd/PpIkc+rEMSLh0Ku1lWXPOx02/b6bL0V+9J8fQ1UU1lxQ29Pe2eecng41FxSVieLScrK64L0PDxCJRllUkofLaUcIgRAQjsR58/3PWHFeJTk+NwKQZIlMVuPTI+08s+0dBkNpltdfgM1mp6vzFMMDvce8bsdDE6HIpKbpbP2vh+dm4Pq7nyaVyuCwW7zD49MvBPLL7lmx9kq8vlyGB/s4cfQzPDaNdavPZeV5VRQV5GJRFUbGpykM+hFCMB2OcrJrkI9aj3P89DCB/FIqllQhyzI93R30drX32azyveOh2QN9rS/xty9Psrpx2ZyA/qExbn5gM6oi43bacsdD4V96/fn3NjRdLBWWlJPJpBjo6+RMbwd6Okqu10ae3z2/Ec/MxhkPRYildHw5eZSWleP1+kgmE3SdPsnwUH+HzaI82NbR//Ej911HOpNly9P3z+8TAPxhx/s898p7uJxWAn63a3Ak9Iis2jaWV9UFqmrq8fhy0HWdyOwM4ekQsdgsqUQMLZPEarXhdntwezxYrTay2QzjYyP09XQasejMBy6H7cnegbHjt7Q0E40leeXZTQsWmvnz1p79PPPibpwOKx/98T/FyhseXZtKZx+1O33rissqnMWlS/Dn5mG1OZBlhWw6Pvc0M020bJZEIsZUaILx0WFzdnamXRbmtoI83/aRiXB418tP8u+/eYNtP3/oOxvVgnOivYufPbcDt9PO8fZ+qhYX2M+MTDZnMtpNkmJptjvcpU6Xx2VzOCUBZNIJspk0qWQynUomQpqWaZMlscvjduz+S+vxwcsvbmB0fIb777ySjRu+/50x/XdfxwBbXnyL/3n7rxTn5zA4OsWx938tLr/jX4pj8WRtVtNqDMMsMRFuAVlJEpOyJHVbrerJksJAd+vhjsTSxYXcfv1aDrd18fIvN/4jDP8HBe2O1hStCwQAAAAldEVYdGRhdGU6Y3JlYXRlADIwMjUtMDEtMDFUMDY6MzA6MDArMDA6MDAHmDknAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDI1LTAxLTAxVDA2OjMwOjAwKzAwOjAwdsWBmwAAACh0RVh0ZGF0ZTp0aW1lc3RhbXAAMjAyNS0wMS0wMVQwNjozMDoyMCswMDowMGP1pzkAAAAASUVORK5CYII=" alt="">
-    <p><?= number_format($time_taken, 3) ?> s</p>
+    <p><?= number_format($time_taken * 1000, 2) ?> ms</p>
   </div>
 </body>
 <script>
